@@ -720,6 +720,9 @@
 	    case SA_IFINDEX:
 	      RESULT(sa.type, i, (nh && nh->iface) ? nh->iface->index : 0);
 	      break;
+	    case SA_IFGROUP:
+	      RESULT(sa.type, i, (nh && nh->iface) ? nh->iface->group : 0);
+	      break;
 	    case SA_WEIGHT:
 	      RESULT(sa.type, i, (nh ? nh->weight : 0) + 1);
 	      break;

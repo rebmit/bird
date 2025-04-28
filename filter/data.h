@@ -37,6 +37,7 @@ enum f_sa_code {
   SA_DEST,
   SA_IFNAME,
   SA_IFINDEX,
+  SA_IFGROUP,
   SA_WEIGHT,
   SA_GW_MPLS,
   SA_ONLINK,

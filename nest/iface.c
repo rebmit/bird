@@ -242,6 +242,7 @@ if_copy(struct iface *to, struct iface *from)
   to->flags = from->flags | (to->flags & IF_TMP_DOWN);
   to->mtu = from->mtu;
   to->master_index = from->master_index;
+  to->group = from->group;
 
   if_unlink(to->master);
   if_link(to->master = from->master);
@@ -1185,7 +1186,7 @@ if_show(void)
       else if (i->master_index)
 	bsprintf(mbuf, " master=#%u", i->master_index);
 
-      cli_msg(-1001, "%s %s (index=%d%s)", i->name, (i->flags & IF_UP) ? "up" : "down", i->index, mbuf);
+      cli_msg(-1001, "%s %s (index=%d group=%d%s)", i->name, (i->flags & IF_UP) ? "up" : "down", i->index, i->group, mbuf);
       if (!(i->flags & IF_MULTIACCESS))
 	type = "PtP";
       else
