@@ -689,6 +689,7 @@
       case SA_DEST:	RESULT(sa.f_type, i, rta->dest); break;
       case SA_IFNAME:	RESULT(sa.f_type, s, rta->nh.iface ? rta->nh.iface->name : ""); break;
       case SA_IFINDEX:	RESULT(sa.f_type, i, rta->nh.iface ? rta->nh.iface->index : 0); break;
+      case SA_IFGROUP:	RESULT(sa.f_type, i, rta->nh.iface ? rta->nh.iface->group : 0); break;
       case SA_WEIGHT:	RESULT(sa.f_type, i, rta->nh.weight + 1); break;
       case SA_PREF:	RESULT(sa.f_type, i, rta->pref); break;
       case SA_GW_MPLS:	RESULT(sa.f_type, i, rta->nh.labels ? rta->nh.label[0] : MPLS_NULL); break;
