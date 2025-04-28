@@ -434,7 +434,7 @@ static struct nl_want_attrs nlmsgerr_attr_want[BIRD_NLMSGERR_MAX] = {
 };
 
 
-#define BIRD_IFLA_MAX (IFLA_AF_SPEC+1)
+#define BIRD_IFLA_MAX (IFLA_GROUP+1)
 
 static struct nl_want_attrs ifla_attr_want[BIRD_IFLA_MAX] = {
   [IFLA_ADDRESS]  = { 1, 0, 0 },
@@ -444,6 +444,7 @@ static struct nl_want_attrs ifla_attr_want[BIRD_IFLA_MAX] = {
   [IFLA_WIRELESS] = { 1, 0, 0 },
   [IFLA_LINKINFO] = { 1, 0, 0 },
   [IFLA_AF_SPEC]  = { 1, 0, 0 },
+  [IFLA_GROUP]	  = { 1, 1, sizeof(u32) },
 };
 
 #define BIRD_INFO_MAX (IFLA_INFO_DATA+1)
@@ -1080,7 +1081,7 @@ nl_parse_link(struct nlmsghdr *h, int scan)
   struct iface f = { .attrs = &rta };
   struct iface *ifi;
   const char *name, *kind = NULL;
-  u32 mtu, master = 0;
+  u32 mtu, master = 0, group = 0;
   uint fl;
 
   if (!(i = nl_checkin(h, sizeof(*i))) || !nl_parse_attrs(IFLA_RTA(i), ifla_attr_want, a, sizeof(a)))
@@ -1162,6 +1163,9 @@ nl_parse_link(struct nlmsghdr *h, int scan)
     }
   }
 
+  if (a[IFLA_GROUP])
+    group = rta_get_u32(a[IFLA_GROUP]);
+
   ifi = if_find_by_index(i->ifi_index);
   if (!new)
     {
@@ -1179,6 +1183,7 @@ nl_parse_link(struct nlmsghdr *h, int scan)
 
       strncpy(f.name, name, sizeof(f.name)-1);
       f.index = i->ifi_index;
+      f.group = group;
       f.mtu = mtu;
 
       if (master)
@@ -1455,6 +1460,7 @@ kif_do_scan(struct kif_proto *p UNUSED)
 	.flags = i->flags,
 	.mtu = i->mtu,
 	.index = i->index,
+	.group = i->group,
 	.master_index = i->master_index,
 	.master = if_find_by_index(i->master_index),
 	.lladdr = i->lladdr,
